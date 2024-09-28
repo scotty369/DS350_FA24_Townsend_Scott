@@ -7,6 +7,7 @@ output:
     code_folding: hide
     markdown: default
 ---
+# Needed Files
 
 ```{r, message=FALSE, warning=FALSE}
 library(tidyverse)
@@ -15,6 +16,8 @@ library(gapminder)
 gapminder_filtered <- gapminder %>% 
   filter(country != "Kuwait")
 ```
+
+# Gapminder Plot
 
 ```{r, fig.width=12, fig.height=6}
 ggplot(gapminder_filtered, aes(x = lifeExp, y = gdpPercap, size = pop, color = continent)) +
