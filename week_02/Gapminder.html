@@ -110,23 +110,42 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
+<section id="needed-files" class="level1">
+<h1>Needed Files</h1>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(gapminder_filtered, <span class="fu">aes</span>(<span class="at">x =</span> lifeExp, <span class="at">y =</span> gdpPercap, <span class="at">size =</span> pop, <span class="at">color =</span> continent)) <span class="sc">+</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">10</span>), <span class="at">name=</span><span class="st">"Population (100k)"</span>) <span class="sc">+</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">trans =</span> <span class="st">"sqrt"</span>, <span class="at">labels =</span> scales<span class="sc">::</span>comma) <span class="sc">+</span> </span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>year, <span class="at">nrow=</span><span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Life Expectancy"</span>, <span class="at">y =</span> <span class="st">"GDP per Capita"</span>, <span class="at">title =</span> <span class="st">"GDP vs Life Expectancy"</span>) <span class="sc">+</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="fu">library</span>(gapminder)</span>
+<span id="cb1-3"><a href="#cb1-3"></a></span>
+<span id="cb1-4"><a href="#cb1-4"></a>gapminder_filtered <span class="ot">&lt;-</span> gapminder <span class="sc">%&gt;%</span> </span>
+<span id="cb1-5"><a href="#cb1-5"></a>  <span class="fu">filter</span>(country <span class="sc">!=</span> <span class="st">"Kuwait"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="gapminder-plot" class="level1">
+<h1>Gapminder Plot</h1>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">ggplot</span>(gapminder_filtered, <span class="fu">aes</span>(<span class="at">x =</span> lifeExp, <span class="at">y =</span> gdpPercap, <span class="at">size =</span> pop, <span class="at">color =</span> continent)) <span class="sc">+</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb2-3"><a href="#cb2-3"></a>  <span class="fu">scale_size</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">10</span>), <span class="at">name=</span><span class="st">"Population (100k)"</span>) <span class="sc">+</span></span>
+<span id="cb2-4"><a href="#cb2-4"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">trans =</span> <span class="st">"sqrt"</span>, <span class="at">labels =</span> scales<span class="sc">::</span>comma) <span class="sc">+</span> </span>
+<span id="cb2-5"><a href="#cb2-5"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>year, <span class="at">nrow=</span><span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb2-6"><a href="#cb2-6"></a>  <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">12</span>) <span class="sc">+</span></span>
+<span id="cb2-7"><a href="#cb2-7"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Life Expectancy"</span>, <span class="at">y =</span> <span class="st">"GDP per Capita"</span>, <span class="at">title =</span> <span class="st">"GDP vs Life Expectancy"</span>) <span class="sc">+</span></span>
+<span id="cb2-8"><a href="#cb2-8"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Gapminder_files/figure-html/GDP%20vs%20Life%20Expectancy%20Plot-1.png" class="img-fluid figure-img" width="1152"></p>
+<p><img src="Gapminder_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="1152"></p>
 </figure>
 </div>
 </div>
 </div>
+</section>
 
 </main>
 <!-- /main column -->
