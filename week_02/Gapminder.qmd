@@ -10,7 +10,6 @@ output:
     theme: cerulean
     code_folding: hide
     markdown: default
-
 ---
 
 ```{r, message=FALSE, warning=FALSE}
