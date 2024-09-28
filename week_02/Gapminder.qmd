@@ -1,0 +1,49 @@
+---
+title: "Gapminder Plot"
+author: "Scott Townsend"
+output: 
+  html_document:
+    theme: cerulean
+    code_folding: hide
+    markdown: default
+---
+
+```{r, message=FALSE, warning=FALSE}
+# Load required libraries
+library(tidyverse)
+library(gapminder)
+
+data(gapminder)
+
+# Clean the data by removing Kuwait
+gapminder_clean <- gapminder %>%
+  filter(country != "Kuwait")
+```
+
+
+```{r, message=FALSE, warning=FALSE}
+gapminder_clean %>%
+  filter(year %in% seq(1952, 2007, by = 5)) %>%  # Filter for 5-year increments
+  ggplot(aes(x = lifeExp, y = gdpPercap, color = continent)) +
+  geom_point(aes(size = pop / 100000), alpha = 0.6) +  # Reduce point opacity slightly
+  scale_y_continuous(trans = "log10", breaks = c(10000, 50000, 100000, 200000, 500000)) +  # Use log scale for y-axis
+  scale_size_continuous(range = c(1, 10), name = "Population (100k)") +  # Reduced point size range
+  theme_minimal() +  # Simpler theme for readability
+  labs(
+    x = "Life Expectancy",
+    y = "GDP per Capita",
+    color = "Continent"
+  ) +
+  facet_wrap(~ year, nrow = 2) +  # Change to 2 rows of facets for better spacing
+  theme(
+    legend.position = "right",  # Position legend to the right
+    panel.spacing = unit(1.5, "lines"),  # Increase space between panels
+    strip.text = element_text(size = 12),  # Adjust facet labels size
+    axis.text.x = element_text(size = 10, angle = 45, hjust = 1),  # Rotate x-axis labels for readability
+    axis.text.y = element_text(size = 10),  # Adjust y-axis text size
+    plot.title = element_text(hjust = 0.5, size = 16, face = "bold"),  # Center title and adjust size
+    legend.title = element_text(size = 12),
+    legend.text = element_text(size = 10)
+  ) +
+  ggtitle("GDP per Capita vs Life Expectancy by Year (1952-2007)")
+```
