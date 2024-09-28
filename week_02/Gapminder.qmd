@@ -1,10 +1,6 @@
 ---
 title: "Gapminder Plot"
 author: "Scott Townsend"
-date: "`r format(Sys.time(), '%B %d, %Y')`"
-execute: 
-  keep-md: true
-  
 output: 
   html_document:
     theme: cerulean
@@ -13,9 +9,6 @@ output:
 ---
 
 ```{r, message=FALSE, warning=FALSE}
-#| label: load-packages
-#| echo: false
-
 library(tidyverse)
 library(gapminder)
 
@@ -24,9 +17,6 @@ gapminder_filtered <- gapminder %>%
 ```
 
 ```{r, fig.width=12, fig.height=6}
-#| label: GDP vs Life Expectancy Plot 
-
-
 ggplot(gapminder_filtered, aes(x = lifeExp, y = gdpPercap, size = pop, color = continent)) +
   geom_point(alpha = 0.7) +
   scale_size(range = c(1, 10), name="Population (100k)") +
