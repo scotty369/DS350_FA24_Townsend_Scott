@@ -2,7 +2,7 @@
 title: "Exploring NYC Flights Data"
 author: "Scott Townsend"
 
-date: "September 28, 2024"
+date: "September 29, 2024"
 
 execute:
   keep-md: true
