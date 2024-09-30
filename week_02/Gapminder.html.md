@@ -49,3 +49,4 @@ ggplot(gapminder_filtered, aes(x = lifeExp, y = gdpPercap, size = pop / 100000, 
 ![](Gapminder_files/figure-html/unnamed-chunk-2-1.png){width=1152}
 :::
 :::
+
