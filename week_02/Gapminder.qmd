@@ -12,7 +12,7 @@ format:
     code-line-numbers: true
 ---
 
-# Needed Files
+# Required Libraries
 
 ```{r, message=FALSE, warning=FALSE}
 library(tidyverse)
