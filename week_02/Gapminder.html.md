@@ -12,10 +12,14 @@ format:
     code-line-numbers: true
 ---
 
+
+
 # Required Libraries
 
-::: cell
-``` {.r .cell-code}
+
+::: {.cell}
+
+```{.r .cell-code}
 library(tidyverse)
 library(gapminder)
 
@@ -24,10 +28,13 @@ gapminder_filtered <- gapminder %>%
 ```
 :::
 
+
 # Gapminder Plot
 
-::: cell
-``` {.r .cell-code}
+
+::: {.cell}
+
+```{.r .cell-code}
 ggplot(gapminder_filtered, aes(x = lifeExp, y = gdpPercap, size = pop / 100000, color = continent)) +
   geom_point(alpha = 0.7) +
   scale_size(range = c(1, 10), name="Population (100k)") +
@@ -38,7 +45,7 @@ ggplot(gapminder_filtered, aes(x = lifeExp, y = gdpPercap, size = pop / 100000, 
   theme(legend.position = "right")
 ```
 
-::: cell-output-display
-![](Gapminder_files/figure-html/unnamed-chunk-2-1.png){width="1152"}
+::: {.cell-output-display}
+![](Gapminder_files/figure-html/unnamed-chunk-2-1.png){width=1152}
 :::
 :::
