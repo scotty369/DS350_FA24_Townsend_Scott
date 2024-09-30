@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Scott Townsend">
-<meta name="dcterms.date" content="2024-09-28">
+<meta name="dcterms.date" content="2024-09-30">
 
 <title>Gapminder Plot</title>
 <style>
@@ -98,7 +98,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">September 28, 2024</p>
+      <p class="date">September 30, 2024</p>
     </div>
   </div>
   
@@ -128,7 +128,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">ggplot</span>(gapminder_filtered, <span class="fu">aes</span>(<span class="at">x =</span> lifeExp, <span class="at">y =</span> gdpPercap, <span class="at">size =</span> pop, <span class="at">color =</span> continent)) <span class="sc">+</span></span>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">ggplot</span>(gapminder_filtered, <span class="fu">aes</span>(<span class="at">x =</span> lifeExp, <span class="at">y =</span> gdpPercap, <span class="at">size =</span> pop <span class="sc">/</span> <span class="dv">100000</span>, <span class="at">color =</span> continent)) <span class="sc">+</span></span>
 <span id="cb2-2"><a href="#cb2-2"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
 <span id="cb2-3"><a href="#cb2-3"></a>  <span class="fu">scale_size</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">10</span>), <span class="at">name=</span><span class="st">"Population (100k)"</span>) <span class="sc">+</span></span>
 <span id="cb2-4"><a href="#cb2-4"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">trans =</span> <span class="st">"sqrt"</span>, <span class="at">labels =</span> scales<span class="sc">::</span>comma) <span class="sc">+</span> </span>

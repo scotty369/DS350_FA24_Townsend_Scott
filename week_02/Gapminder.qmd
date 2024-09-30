@@ -25,7 +25,7 @@ gapminder_filtered <- gapminder %>%
 # Gapminder Plot
 
 ```{r, fig.width=12, fig.height=6}
-ggplot(gapminder_filtered, aes(x = lifeExp, y = gdpPercap, size = pop, color = continent)) +
+ggplot(gapminder_filtered, aes(x = lifeExp, y = gdpPercap, size = pop / 100000, color = continent)) +
   geom_point(alpha = 0.7) +
   scale_size(range = c(1, 10), name="Population (100k)") +
   scale_y_continuous(trans = "sqrt", labels = scales::comma) + 

@@ -1,7 +1,7 @@
 ---
 title: "Gapminder Plot"
 author: "Scott Townsend"
-date: "September 28, 2024"
+date: "September 30, 2024"
 
 execute:
   keep-md: true
@@ -35,7 +35,7 @@ gapminder_filtered <- gapminder %>%
 ::: {.cell}
 
 ```{.r .cell-code}
-ggplot(gapminder_filtered, aes(x = lifeExp, y = gdpPercap, size = pop, color = continent)) +
+ggplot(gapminder_filtered, aes(x = lifeExp, y = gdpPercap, size = pop / 100000, color = continent)) +
   geom_point(alpha = 0.7) +
   scale_size(range = c(1, 10), name="Population (100k)") +
   scale_y_continuous(trans = "sqrt", labels = scales::comma) + 
