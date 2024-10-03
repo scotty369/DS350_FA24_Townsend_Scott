@@ -1,7 +1,7 @@
 ---
 title: "W03 Case Study"
 author: "Scott Townsend"
-date: "October 02, 2024"
+date: "October 03, 2024"
 
 execute:
   keep-md: true
@@ -107,16 +107,19 @@ worst_destinations <- flights %>%
   ) %>%
   arrange(desc(mean_arr_delay))
 
-
 top_worst_destinations <- worst_destinations %>%
   top_n(10, mean_arr_delay)
 
-ggplot(top_worst_destinations, aes(x = reorder(dest, mean_arr_delay), y = mean_arr_delay)) +
-  geom_point(color = "black", size = 3) +
+flights_top_destinations <- flights %>%
+  filter(dest %in% top_worst_destinations$dest)
+
+ggplot(flights_top_destinations, aes(x = reorder(dest, arr_delay), y = arr_delay)) +
+  geom_jitter(width = 0.2, alpha = 0.3, color = "blue") + 
+  stat_summary(fun = mean, geom = "point", color = "red", size = 3, shape = 15) + 
   labs(
-    title = "Top 10 Worst Destination Airports by Mean Arrival Delay",
+    title = "Top 10 Worst Destination Airports by Arrival Delays",
     x = "Destination Airport",
-    y = "Mean Arrival Delay (minutes)"
+    y = "Arrival Delay (minutes)"
   ) +
   coord_flip() +
   theme_minimal()
@@ -128,4 +131,4 @@ ggplot(top_worst_destinations, aes(x = reorder(dest, mean_arr_delay), y = mean_a
 :::
 
 
-Reviewing the scatter plot above, we are able to see that the destination airport with the worst arrival delays is CAE airport being over a 40 minute delay. TUL is behind CAE at close to a 35 minute delay. 
+Reviewing the plot above displaying individual flights across different airports, we are able to see that the destination airport with the worst arrival delays is RIC airport with one flight recording a delay close to a 450 minute delay. CAK is behind RIC with one flight being over a 400 minute delay. 

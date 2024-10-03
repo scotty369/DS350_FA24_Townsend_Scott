@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Scott Townsend">
-<meta name="dcterms.date" content="2024-10-02">
+<meta name="dcterms.date" content="2024-10-03">
 
 <title>W03 Case Study</title>
 <style>
@@ -98,7 +98,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">October 2, 2024</p>
+      <p class="date">October 3, 2024</p>
     </div>
   </div>
   
@@ -199,19 +199,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-7"><a href="#cb4-7"></a>  ) <span class="sc">%&gt;%</span></span>
 <span id="cb4-8"><a href="#cb4-8"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(mean_arr_delay))</span>
 <span id="cb4-9"><a href="#cb4-9"></a></span>
-<span id="cb4-10"><a href="#cb4-10"></a></span>
-<span id="cb4-11"><a href="#cb4-11"></a>top_worst_destinations <span class="ot">&lt;-</span> worst_destinations <span class="sc">%&gt;%</span></span>
-<span id="cb4-12"><a href="#cb4-12"></a>  <span class="fu">top_n</span>(<span class="dv">10</span>, mean_arr_delay)</span>
-<span id="cb4-13"><a href="#cb4-13"></a></span>
-<span id="cb4-14"><a href="#cb4-14"></a><span class="fu">ggplot</span>(top_worst_destinations, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(dest, mean_arr_delay), <span class="at">y =</span> mean_arr_delay)) <span class="sc">+</span></span>
-<span id="cb4-15"><a href="#cb4-15"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"black"</span>, <span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb4-16"><a href="#cb4-16"></a>  <span class="fu">labs</span>(</span>
-<span id="cb4-17"><a href="#cb4-17"></a>    <span class="at">title =</span> <span class="st">"Top 10 Worst Destination Airports by Mean Arrival Delay"</span>,</span>
-<span id="cb4-18"><a href="#cb4-18"></a>    <span class="at">x =</span> <span class="st">"Destination Airport"</span>,</span>
-<span id="cb4-19"><a href="#cb4-19"></a>    <span class="at">y =</span> <span class="st">"Mean Arrival Delay (minutes)"</span></span>
-<span id="cb4-20"><a href="#cb4-20"></a>  ) <span class="sc">+</span></span>
-<span id="cb4-21"><a href="#cb4-21"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
-<span id="cb4-22"><a href="#cb4-22"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-10"><a href="#cb4-10"></a>top_worst_destinations <span class="ot">&lt;-</span> worst_destinations <span class="sc">%&gt;%</span></span>
+<span id="cb4-11"><a href="#cb4-11"></a>  <span class="fu">top_n</span>(<span class="dv">10</span>, mean_arr_delay)</span>
+<span id="cb4-12"><a href="#cb4-12"></a></span>
+<span id="cb4-13"><a href="#cb4-13"></a>flights_top_destinations <span class="ot">&lt;-</span> flights <span class="sc">%&gt;%</span></span>
+<span id="cb4-14"><a href="#cb4-14"></a>  <span class="fu">filter</span>(dest <span class="sc">%in%</span> top_worst_destinations<span class="sc">$</span>dest)</span>
+<span id="cb4-15"><a href="#cb4-15"></a></span>
+<span id="cb4-16"><a href="#cb4-16"></a><span class="fu">ggplot</span>(flights_top_destinations, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(dest, arr_delay), <span class="at">y =</span> arr_delay)) <span class="sc">+</span></span>
+<span id="cb4-17"><a href="#cb4-17"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.2</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>, <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span> </span>
+<span id="cb4-18"><a href="#cb4-18"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">"point"</span>, <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">shape =</span> <span class="dv">15</span>) <span class="sc">+</span> </span>
+<span id="cb4-19"><a href="#cb4-19"></a>  <span class="fu">labs</span>(</span>
+<span id="cb4-20"><a href="#cb4-20"></a>    <span class="at">title =</span> <span class="st">"Top 10 Worst Destination Airports by Arrival Delays"</span>,</span>
+<span id="cb4-21"><a href="#cb4-21"></a>    <span class="at">x =</span> <span class="st">"Destination Airport"</span>,</span>
+<span id="cb4-22"><a href="#cb4-22"></a>    <span class="at">y =</span> <span class="st">"Arrival Delay (minutes)"</span></span>
+<span id="cb4-23"><a href="#cb4-23"></a>  ) <span class="sc">+</span></span>
+<span id="cb4-24"><a href="#cb4-24"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb4-25"><a href="#cb4-25"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -221,7 +224,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>Reviewing the scatter plot above, we are able to see that the destination airport with the worst arrival delays is CAE airport being over a 40 minute delay. TUL is behind CAE at close to a 35 minute delay.</p>
+<p>Reviewing the plot above displaying individual flights across different airports, we are able to see that the destination airport with the worst arrival delays is RIC airport with one flight recording a delay close to a 450 minute delay. CAK is behind RIC with one flight being over a 400 minute delay.</p>
 </section>
 </section>
 
