@@ -1,0 +1,80 @@
+---
+title: "W04 Task - Stock Data"
+author: "Scott Townsend"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+
+execute:
+  keep-md: true
+
+format:
+  html:
+    code-fold: true
+    code-line-numbers: true
+---
+
+# Required Libraries & RDS File
+
+```{r, message=FALSE, warning=FALSE}
+
+library(readr)
+library(tidyr)
+library(dplyr)
+library(downloader)
+library(pander)
+
+url <- "https://raw.githubusercontent.com/byuistats/data/master/Dart_Expert_Dow_6month_anova/Dart_Expert_Dow_6month_anova.RDS"
+
+download(url, destfile = "Dart_Expert_Dow_6month_anova.RDS", mode = "wb")
+dart_dow <- readRDS("Dart_Expert_Dow_6month_anova.RDS")
+
+```
+
+# Tidying the Data
+
+```{r, message=FALSE, warning=FALSE, fig.height=4, fig.width=12}
+
+dow_sep <- dart_dow %>%
+  separate(contest_period, into = c("month_end", "year_end"), sep = -4) %>% 
+  separate(month_end, into = c("month_start", "month_end"), sep = "-")  
+
+saveRDS(dow_sep, file = "dow_tidy.rds")
+
+dow_vis <- dow_sep %>%
+  filter(variable == "DJIA") %>% 
+  select(month_end, year_end, value) %>%
+  mutate(
+    month_end = case_when(
+      month_end == "Dec." ~ "December",
+      month_end == "Febuary" ~ "February",
+      TRUE ~ month_end
+    )
+  ) %>%
+  group_by(year_end, month_end) %>% 
+  mutate(year_number = case_when(  
+    month_end == "December" ~ 12,
+    month_end == "November" ~ 11,
+    month_end == "October" ~ 10,
+    month_end == "September" ~ 9,
+    month_end == "August" ~ 8,
+    month_end == "July" ~ 7,
+    month_end == "June" ~ 6,
+    month_end == "May" ~ 5,
+    month_end == "April" ~ 4,
+    month_end == "March" ~ 3,
+    month_end == "February" ~ 2,
+    month_end == "January" ~ 1
+  ))
+
+dow_table <- dow_vis %>%
+  pivot_wider(names_from = year_end, values_from = value) %>%  
+  arrange(year_number) %>% 
+  select(-year_number) %>%  
+  rename(Month = month_end) 
+
+dow_table[] <- lapply(dow_table, function(x) {
+  ifelse(is.na(x), "-", x)
+})
+
+pander(dow_table)
+```
+
