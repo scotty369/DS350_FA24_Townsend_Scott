@@ -22,6 +22,7 @@ library(ggplot2)
 library(tidyverse)
 library(downloader)
 library(readxl)
+library(curl)
 ```
 
 ### Data Sets
@@ -45,7 +46,7 @@ download("https://raw.githubusercontent.com/hadley/r4ds/main/data/heights.csv", 
 df_bureau <- read_csv("bureau.csv")
 
 # University of Wisconsin National Survey Data: SPSS format
-download.file("http://www.ssc.wisc.edu/nsfh/wave3/NSFH3%20Apr%202005%20release/main05022005.sav", destfile = "university.sav", mode = "wb")
+curl_download("http://www.ssc.wisc.edu/nsfh/wave3/NSFH3%20Apr%202005%20release/main05022005.sav", destfile = "university.sav")
 df_university <- read_sav("university.sav")
 
 ```
