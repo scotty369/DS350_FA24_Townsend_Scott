@@ -1,0 +1,63 @@
+---
+title: "W04 Task - Country Heights"
+author: "Scott Townsend"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+
+execute:
+  keep-md: true
+
+format:
+  html:
+    code-fold: true
+    code-line-numbers: true
+---
+
+## Libraries and Files
+
+```{r, message=FALSE, warning=FALSE, fig.height=4, fig.width=12}
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+library(readxl)
+library(tidyr)
+library(downloader)
+library(pander)
+
+mean_heights <- read_excel("week_04/Height.xlsx", skip = 2)
+```
+
+
+# Task: Country Heights
+
+```{r, message=FALSE, warning=FALSE, fig.height=4, fig.width=12}
+row_height <- mean_heights[, colSums(is.na(mean_heights)) < nrow(mean_heights)]
+col_height <- mean_heights[rowSums(is.na(mean_heights)) != ncol(mean_heights),]
+mean_heights <- mean_heights |>
+    pivot_longer(c("1810","1820","1830","1840","1850","1860","1870","1880","1890","1900","1910","1920","1930","1940","1950","1960","1970","1980"),
+                 values_to = "height.cm", 
+                 names_to = "year_decade")  
+mean_heights <- mean_heights |> filter(!is.na(height.cm) & !is.na(Code))
+mean_heights <- mean_heights |>
+    rename_at(2, ~"country") |>
+    select("Code", "country", "height.cm", "year_decade")
+mean_heights$height_in <- mean_heights$height.cm / 2.54
+mean_heights_cleaned <- mean_heights |> 
+  rename(country = 2) |> 
+  select(Code, country, height.cm, year_decade)
+pander(mean_heights_cleaned,
+       col.names = c("Code", "country", "height_cm", "year_decade"))
+ggplot(mean_heights, 
+       aes(x = year_decade, 
+           y = height_in, 
+           color = country)) +
+    geom_point(size = 1.5) +
+    geom_point(data = filter(mean_heights, country == "Germany"),
+               size = 3, 
+               color = "black") +
+    labs(
+        title = "Heights of Countries (Inches)",
+        x = "Decade",
+        y = "Height (inches)") + 
+    theme_minimal() + 
+    theme(legend.position = "none")
+```
