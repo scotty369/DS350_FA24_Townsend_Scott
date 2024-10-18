@@ -22,14 +22,8 @@ library(readxl)
 library(tidyr)
 library(downloader)
 library(pander)
-library(readr)
 
-```
-
-## Data
-
-```{r, message=FALSE, warning=FALSE, fig.height=4, fig.width=12}
-mean_heights <- read_excel("Height.xlsx", skip = 2)
+mean_heights <- read_excel("week_04/Height.xlsx", skip = 2)
 ```
 
 
@@ -52,13 +46,18 @@ mean_heights_cleaned <- mean_heights |>
   select(Code, country, height.cm, year_decade)
 pander(mean_heights_cleaned,
        col.names = c("Code", "country", "height_cm", "year_decade"))
-ggplot(mean_heights, aes(x = year_decade, y = height_in, color = country)) +
-  geom_point(size = 1.5) +
-  geom_point(data = filter(mean_heights, country == "Germany"), size = 3, color = "black") +
-  labs(
-    title = "Heights of Countries (Inches)",
-    x = "Decade",
-    y = "Height (inches)"
-  ) +
-  theme_minimal()
+ggplot(mean_heights, 
+       aes(x = year_decade, 
+           y = height_in, 
+           color = country)) +
+    geom_point(size = 1.5) +
+    geom_point(data = filter(mean_heights, country == "Germany"),
+               size = 3, 
+               color = "black") +
+    labs(
+        title = "Heights of Countries (Inches)",
+        x = "Decade",
+        y = "Height (inches)") + 
+    theme_minimal() + 
+    theme(legend.position = "none")
 ```
