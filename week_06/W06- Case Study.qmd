@@ -1,0 +1,71 @@
+---
+title: "W06 Case Study - Take Me out to the Ball Game"
+author: "Scott Townsend"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+
+execute:
+  keep-md: true
+
+format:
+  html:
+    code-fold: true
+    code-line-numbers: true
+---
+
+### Libraries
+
+```{r, message=FALSE, warning=FALSE, fig.height=4, fig.width=12}
+library(Lahman)
+library(priceR)
+library(ggplot2)
+library(dplyr) 
+```
+
+## Load Data Sets
+
+```{r, message=FALSE, warning=FALSE, fig.height=4, fig.width=12}
+data("People")
+data("Salaries")
+data("CollegePlaying")
+```
+
+# Merging and Filtering Data
+
+```{r, message=FALSE, warning=FALSE, fig.height=4, fig.width=12}
+utah_players <- CollegePlaying %>%
+  filter(schoolID %in% c("utbyu", "utah", "utst")) %>%
+  left_join(People, by = "playerID") %>%
+  left_join(Salaries, by = "playerID")
+```
+
+# Case Study - Visualization 
+
+```{r, message=FALSE, warning=FALSE, fig.height=4, fig.width=12}
+utah_players <- CollegePlaying %>%
+  filter(schoolID %in% c("utbyu", "utah", "utst")) %>%
+  left_join(People, by = "playerID") %>%
+  left_join(Salaries, by = "playerID")
+
+utah_players$yearID <- as.character(utah_players$yearID.x)
+utah_players$year_as_date <- as.Date(paste0(utah_players$yearID, "-01-01"), format = "%Y-%m-%d")
+
+utah_players$salary_2021 <- adjust_for_inflation(
+  price = utah_players$salary, 
+  from_date = utah_players$year_as_date, 
+  country = "US", 
+  to_date = 2021
+)
+
+ggplot(utah_players, aes(x = schoolID, y = salary_2021, fill = schoolID)) +
+  geom_boxplot(outlier.shape = NA, alpha = 0.7) +  
+  geom_jitter(width = 0.1, alpha = 0.4, size = 1) +  
+  labs(title = "Player Salaries by Utah Colleges: Box Plot with Jitter", 
+       x = "College", y = "Salary (2021 dollars)") +
+  theme_minimal() +
+  scale_fill_brewer(palette = "Set3")
+
+```
+
+# Summary of findings
+
+The box plot illustrates the differences in inflation-adjusted salaries of professional baseball players from BYU compared to other Utah schools. It appears that BYU alumni tend to earn higher salaries, on average, than players from other institutions. This could suggest stronger career trajectories or opportunities for BYU alumni in Major League Baseball (MLB). Further investigation could explore factors contributing to these differences, such as the quality of coaching, recruitment efforts, and player development programs at each university.
