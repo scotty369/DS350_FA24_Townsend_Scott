@@ -1,7 +1,7 @@
 ---
 title: "W06 Case Study - Take Me out to the Ball Game"
 author: "Scott Townsend"
-date: "October 21, 2024"
+date: "October 31, 2024"
 
 execute:
   keep-md: true
@@ -22,8 +22,9 @@ format:
 ```{.r .cell-code}
 library(Lahman)
 library(priceR)
+library(dplyr)
 library(ggplot2)
-library(dplyr) 
+library(tidyr)
 ```
 :::
 
@@ -47,34 +48,25 @@ data("CollegePlaying")
 ::: {.cell}
 
 ```{.r .cell-code}
-utah_players <- CollegePlaying %>%
-  filter(schoolID %in% c("utbyu", "utah", "utst")) %>%
-  left_join(People, by = "playerID") %>%
-  left_join(Salaries, by = "playerID")
-```
-:::
+average_salaries <- Salaries %>%
+  group_by(playerID) %>%
+  summarise(avg_ann_sal = mean(salary), .groups = 'drop')
 
+baseball_data <- CollegePlaying %>%
+  left_join(People %>% select(playerID, nameFirst, nameLast), by = "playerID") %>%
+  left_join(average_salaries, by = "playerID") %>%
+  left_join(Schools, by = "schoolID") %>%
+  mutate(name_full = paste(nameFirst, nameLast)) %>%
+  filter(state == "UT") %>%
+  select(yearID, schoolID, name_full, avg_ann_sal)
 
-# Case Study - Visualization 
-
-
-::: {.cell}
-
-```{.r .cell-code}
-utah_players <- CollegePlaying %>%
-  filter(schoolID %in% c("utbyu", "utah", "utst")) %>%
-  left_join(People, by = "playerID") %>%
-  left_join(Salaries, by = "playerID")
-
-utah_players$yearID <- as.character(utah_players$yearID.x)
-utah_players$year_as_date <- as.Date(paste0(utah_players$yearID, "-01-01"), format = "%Y-%m-%d")
-
-utah_players$salary_2021 <- adjust_for_inflation(
-  price = utah_players$salary, 
-  from_date = utah_players$year_as_date, 
-  country = "US", 
-  to_date = 2021
-)
+baseball_data_adjusted <- baseball_data %>%
+  group_by(schoolID, yearID) %>%
+  summarise(avg_ann_sal = mean(avg_ann_sal, na.rm = TRUE), .groups = 'drop') %>%
+  mutate(adjusted_earnings = adjust_for_inflation(price = avg_ann_sal, 
+                                                  from_date = yearID, 
+                                                  country = "US", 
+                                                  to_date = 2021))
 ```
 
 ::: {.cell-output .cell-output-stdout}
@@ -87,15 +79,34 @@ Generating URL to request all 64 results
 
 
 :::
+:::
+
+
+# Case Study - Visualization 
+
+
+::: {.cell}
 
 ```{.r .cell-code}
-ggplot(utah_players, aes(x = schoolID, y = salary_2021, fill = schoolID)) +
-  geom_boxplot(outlier.shape = NA, alpha = 0.7) +  
-  geom_jitter(width = 0.1, alpha = 0.4, size = 1) +  
-  labs(title = "Player Salaries by Utah Colleges: Box Plot with Jitter", 
-       x = "College", y = "Salary (2021 dollars)") +
-  theme_minimal() +
-  scale_fill_brewer(palette = "Set3")
+reshaped_data <- baseball_data_adjusted %>%
+  pivot_longer(cols = adjusted_earnings, names_to = "Earnings_Type", values_to = "Value")
+
+visual2 <- ggplot(reshaped_data, aes(x = yearID, y = Value, color = schoolID)) +
+  geom_area(aes(fill = schoolID), alpha = 0.5) +  
+  geom_line(size = 1) +
+  labs(title = "Annual Average Salaries of Professional Baseball Players from Utah Colleges",
+       subtitle = "Comparing BYU with Other Institutions (Inflation-Adjusted)",
+       y = "Average Salary (Inflation-Adjusted)",
+       x = "Year",
+       color = "College") +
+  theme_light(base_size = 15) +  
+  scale_y_continuous(labels = scales::dollar_format()) +
+  theme(panel.grid.minor = element_blank(),  
+        plot.title = element_text(color = "darkred", face = "bold", size = 20),
+        plot.subtitle = element_text(color = "darkred", face = "italic", size = 16),
+        legend.position = "bottom") 
+
+visual2
 ```
 
 ::: {.cell-output-display}
@@ -106,4 +117,5 @@ ggplot(utah_players, aes(x = schoolID, y = salary_2021, fill = schoolID)) +
 
 # Summary of findings
 
-The box plot illustrates the differences in inflation-adjusted salaries of professional baseball players from BYU compared to other Utah schools. It appears that BYU alumni tend to earn higher salaries, on average, than players from other institutions. This could suggest stronger career trajectories or opportunities for BYU alumni in Major League Baseball (MLB). Further investigation could explore factors contributing to these differences, such as the quality of coaching, recruitment efforts, and player development programs at each university.
+This visualization of the average salaries of Professional Baseball players from different Utah colleges shows how dominant BYU is in comparison to the other schools. It also appears the BYU has had a longer history of recorded salaries of baseball players. 
+
