@@ -1,0 +1,77 @@
+---
+title: "W08 Task - Idaho Water"
+author: "Scott Townsend"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+
+execute:
+  keep-md: true
+
+format:
+  html:
+    code-fold: true
+    code-line-numbers: true
+---
+
+### Libraries
+
+```{r, message=FALSE, warning=FALSE, fig.height=4, fig.width=12}
+library(sf)
+library(ggplot2)
+library(USAboundaries)
+library(dplyr)
+library(USAboundariesData)
+library(rio)
+```
+
+### Data Sets
+
+```{r, message=FALSE, warning=FALSE, fig.height=4, fig.width=12}
+url1 <- "https://byuistats.github.io/M335/data/Wells.zip"
+url2 <- "https://byuistats.github.io/M335/data/Idaho_Dams.zip"
+url3 <- "https://byuistats.github.io/M335/data/water.zip"
+url4 <- "https://byuistats.github.io/M335/data/shp.zip"
+
+temp_dir <- tempdir()
+
+temp_zip <- file.path(temp_dir, "Wells.zip")
+download.file(url1, temp_zip, mode = "wb")
+unzip(temp_zip, exdir = temp_dir)
+wells_data <- st_read(file.path(temp_dir, "Wells.shp"))
+
+temp_zip <- file.path(temp_dir, "Idaho_Dams.zip")
+download.file(url2, temp_zip, mode = "wb")
+unzip(temp_zip, exdir = temp_dir)
+Idaho_Dams_data <- st_read(file.path(temp_dir, "Dam_Safety.shp"))
+
+temp_zip <- file.path(temp_dir, "water.zip")
+download.file(url3, temp_zip, mode = "wb")
+unzip(temp_zip, exdir = temp_dir)
+water_data <- st_read(file.path(temp_dir, "hyd250.shp"))
+
+temp_zip <- file.path(temp_dir, "shp.zip")
+download.file(url4, temp_zip, mode = "wb")
+unzip(temp_zip, exdir = temp_dir)
+county_data <- st_read(file.path(temp_dir, "County-AK-HI-Moved-USA-Map.shp"))
+
+wells_filtered <- wells_data %>% filter(Production > 5000)
+dams_filtered <- Idaho_Dams_data %>% filter(SurfaceAre > 50, Source %in% c("SNAKE RIVER", "HENRYS FORK"))
+
+county_proj <- st_transform(county_data, crs = 26912)
+wells_proj <- st_transform(wells_filtered, crs = 26912)
+dams_proj <- st_transform(dams_filtered, crs = 26912)
+```
+
+# Task - Visualization
+
+```{r, message=FALSE, warning=FALSE, fig.height=4, fig.width=12}
+ggplot() +
+  geom_sf(data = county_proj, fill = "lightgrey", color = "black") +
+  geom_sf(data = wells_proj, color = "darkgreen", size = 2, shape = 16) +
+  geom_sf(data = dams_proj, color = "blue", size = 3, shape = 7, linewidth = 2) +
+  labs(
+    title = "Idaho Key Water System Features",
+  ) +
+  theme_minimal()
+
+ggsave("Idaho_Water_System_Map.png", width = 12, height = 8)
+```
