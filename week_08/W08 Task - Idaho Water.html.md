@@ -1,7 +1,7 @@
 ---
 title: "W08 Task - Idaho Water"
 author: "Scott Townsend"
-date: "November 07, 2024"
+date: "November 12, 2024"
 
 execute:
   keep-md: true
@@ -38,9 +38,6 @@ library(rio)
 ```{.r .cell-code}
 url1 <- "https://byuistats.github.io/M335/data/Wells.zip"
 url2 <- "https://byuistats.github.io/M335/data/Idaho_Dams.zip"
-url3 <- "https://byuistats.github.io/M335/data/water.zip"
-url4 <- "https://byuistats.github.io/M335/data/shp.zip"
-
 temp_dir <- tempdir()
 
 temp_zip <- file.path(temp_dir, "Wells.zip")
@@ -53,7 +50,7 @@ wells_data <- st_read(file.path(temp_dir, "Wells.shp"))
 
 ```
 Reading layer `Wells' from data source 
-  `/private/var/folders/zs/zycd14f96ks5gpx0bsb97xtr0000gn/T/RtmplfTWnP/Wells.shp' 
+  `/private/var/folders/zs/zycd14f96ks5gpx0bsb97xtr0000gn/T/RtmpWrX1kQ/Wells.shp' 
   using driver `ESRI Shapefile'
 Simple feature collection with 195091 features and 33 fields
 Geometry type: POINT
@@ -76,7 +73,7 @@ Idaho_Dams_data <- st_read(file.path(temp_dir, "Dam_Safety.shp"))
 
 ```
 Reading layer `Dam_Safety' from data source 
-  `/private/var/folders/zs/zycd14f96ks5gpx0bsb97xtr0000gn/T/RtmplfTWnP/Dam_Safety.shp' 
+  `/private/var/folders/zs/zycd14f96ks5gpx0bsb97xtr0000gn/T/RtmpWrX1kQ/Dam_Safety.shp' 
   using driver `ESRI Shapefile'
 Simple feature collection with 1127 features and 23 fields
 Geometry type: POINT
@@ -89,58 +86,10 @@ Geodetic CRS:  WGS 84
 :::
 
 ```{.r .cell-code}
-temp_zip <- file.path(temp_dir, "water.zip")
-download.file(url3, temp_zip, mode = "wb")
-unzip(temp_zip, exdir = temp_dir)
-water_data <- st_read(file.path(temp_dir, "hyd250.shp"))
-```
-
-::: {.cell-output .cell-output-stdout}
-
-```
-Reading layer `hyd250' from data source 
-  `/private/var/folders/zs/zycd14f96ks5gpx0bsb97xtr0000gn/T/RtmplfTWnP/hyd250.shp' 
-  using driver `ESRI Shapefile'
-Simple feature collection with 30050 features and 26 fields
-Geometry type: LINESTRING
-Dimension:     XY
-Bounding box:  xmin: 2241685 ymin: 1198722 xmax: 2743850 ymax: 1981814
-Projected CRS: NAD83 / Idaho Transverse Mercator
-```
-
-
-:::
-
-```{.r .cell-code}
-temp_zip <- file.path(temp_dir, "shp.zip")
-download.file(url4, temp_zip, mode = "wb")
-unzip(temp_zip, exdir = temp_dir)
-county_data <- st_read(file.path(temp_dir, "County-AK-HI-Moved-USA-Map.shp"))
-```
-
-::: {.cell-output .cell-output-stdout}
-
-```
-Reading layer `County-AK-HI-Moved-USA-Map' from data source 
-  `/private/var/folders/zs/zycd14f96ks5gpx0bsb97xtr0000gn/T/RtmplfTWnP/County-AK-HI-Moved-USA-Map.shp' 
-  using driver `ESRI Shapefile'
-Simple feature collection with 3115 features and 15 fields
-Geometry type: MULTIPOLYGON
-Dimension:     XY
-Bounding box:  xmin: -2573301 ymin: -1889441 xmax: 2256474 ymax: 1565782
-Projected CRS: Albers
-```
-
-
-:::
-
-```{.r .cell-code}
 wells_filtered <- wells_data %>% filter(Production > 5000)
 dams_filtered <- Idaho_Dams_data %>% filter(SurfaceAre > 50, Source %in% c("SNAKE RIVER", "HENRYS FORK"))
 
-county_proj <- st_transform(county_data, crs = 26912)
-wells_proj <- st_transform(wells_filtered, crs = 26912)
-dams_proj <- st_transform(dams_filtered, crs = 26912)
+ID_counties <- USAboundaries::us_counties(states = "Idaho")
 ```
 :::
 
@@ -152,20 +101,18 @@ dams_proj <- st_transform(dams_filtered, crs = 26912)
 
 ```{.r .cell-code}
 ggplot() +
-  geom_sf(data = county_proj, fill = "lightgrey", color = "black") +
-  geom_sf(data = wells_proj, color = "darkgreen", size = 2, shape = 16) +
-  geom_sf(data = dams_proj, color = "blue", size = 3, shape = 7, linewidth = 2) +
-  labs(
-    title = "Idaho Key Water System Features",
-  ) +
-  theme_minimal()
+  geom_sf(data = ID_counties, fill = "lightgrey", color = "darkgrey", linewidth = 0.5) +
+  geom_sf(data = wells_filtered, color = "black", size = 2, shape = 10) +
+  geom_sf(data = dams_filtered, color = "blue", size = 3, shape = 7, linewidth = 2) +
+  theme_bw() +
+  labs(title = "Idaho Water Map", subtitle = "Filtered Wells and Dams in Idaho") +
+  theme(
+    plot.title = element_text(size = 16, face = "bold", color = "navyblue"),
+    plot.subtitle = element_text(size = 14, color = "darkblue")
+  )
 ```
 
 ::: {.cell-output-display}
 ![](W08-Task---Idaho-Water_files/figure-html/unnamed-chunk-3-1.png){width=1152}
 :::
-
-```{.r .cell-code}
-ggsave("Idaho_Water_System_Map.png", width = 12, height = 8)
-```
 :::

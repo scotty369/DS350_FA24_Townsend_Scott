@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Scott Townsend">
-<meta name="dcterms.date" content="2024-11-07">
+<meta name="dcterms.date" content="2024-11-12">
 
 <title>W08 Task - Idaho Water</title>
 <style>
@@ -98,7 +98,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">November 7, 2024</p>
+      <p class="date">November 12, 2024</p>
     </div>
   </div>
   
@@ -131,19 +131,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>url1 <span class="ot">&lt;-</span> <span class="st">"https://byuistats.github.io/M335/data/Wells.zip"</span></span>
 <span id="cb2-2"><a href="#cb2-2"></a>url2 <span class="ot">&lt;-</span> <span class="st">"https://byuistats.github.io/M335/data/Idaho_Dams.zip"</span></span>
-<span id="cb2-3"><a href="#cb2-3"></a>url3 <span class="ot">&lt;-</span> <span class="st">"https://byuistats.github.io/M335/data/water.zip"</span></span>
-<span id="cb2-4"><a href="#cb2-4"></a>url4 <span class="ot">&lt;-</span> <span class="st">"https://byuistats.github.io/M335/data/shp.zip"</span></span>
-<span id="cb2-5"><a href="#cb2-5"></a></span>
-<span id="cb2-6"><a href="#cb2-6"></a>temp_dir <span class="ot">&lt;-</span> <span class="fu">tempdir</span>()</span>
-<span id="cb2-7"><a href="#cb2-7"></a></span>
-<span id="cb2-8"><a href="#cb2-8"></a>temp_zip <span class="ot">&lt;-</span> <span class="fu">file.path</span>(temp_dir, <span class="st">"Wells.zip"</span>)</span>
-<span id="cb2-9"><a href="#cb2-9"></a><span class="fu">download.file</span>(url1, temp_zip, <span class="at">mode =</span> <span class="st">"wb"</span>)</span>
-<span id="cb2-10"><a href="#cb2-10"></a><span class="fu">unzip</span>(temp_zip, <span class="at">exdir =</span> temp_dir)</span>
-<span id="cb2-11"><a href="#cb2-11"></a>wells_data <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="fu">file.path</span>(temp_dir, <span class="st">"Wells.shp"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-3"><a href="#cb2-3"></a>temp_dir <span class="ot">&lt;-</span> <span class="fu">tempdir</span>()</span>
+<span id="cb2-4"><a href="#cb2-4"></a></span>
+<span id="cb2-5"><a href="#cb2-5"></a>temp_zip <span class="ot">&lt;-</span> <span class="fu">file.path</span>(temp_dir, <span class="st">"Wells.zip"</span>)</span>
+<span id="cb2-6"><a href="#cb2-6"></a><span class="fu">download.file</span>(url1, temp_zip, <span class="at">mode =</span> <span class="st">"wb"</span>)</span>
+<span id="cb2-7"><a href="#cb2-7"></a><span class="fu">unzip</span>(temp_zip, <span class="at">exdir =</span> temp_dir)</span>
+<span id="cb2-8"><a href="#cb2-8"></a>wells_data <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="fu">file.path</span>(temp_dir, <span class="st">"Wells.shp"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Reading layer `Wells' from data source 
-  `/private/var/folders/zs/zycd14f96ks5gpx0bsb97xtr0000gn/T/RtmplfTWnP/Wells.shp' 
+  `/private/var/folders/zs/zycd14f96ks5gpx0bsb97xtr0000gn/T/RtmpWrX1kQ/Wells.shp' 
   using driver `ESRI Shapefile'
 Simple feature collection with 195091 features and 33 fields
 Geometry type: POINT
@@ -160,7 +157,7 @@ Geodetic CRS:  WGS 84</code></pre>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Reading layer `Dam_Safety' from data source 
-  `/private/var/folders/zs/zycd14f96ks5gpx0bsb97xtr0000gn/T/RtmplfTWnP/Dam_Safety.shp' 
+  `/private/var/folders/zs/zycd14f96ks5gpx0bsb97xtr0000gn/T/RtmpWrX1kQ/Dam_Safety.shp' 
   using driver `ESRI Shapefile'
 Simple feature collection with 1127 features and 23 fields
 Geometry type: POINT
@@ -170,46 +167,10 @@ Geodetic CRS:  WGS 84</code></pre>
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>temp_zip <span class="ot">&lt;-</span> <span class="fu">file.path</span>(temp_dir, <span class="st">"water.zip"</span>)</span>
-<span id="cb6-2"><a href="#cb6-2"></a><span class="fu">download.file</span>(url3, temp_zip, <span class="at">mode =</span> <span class="st">"wb"</span>)</span>
-<span id="cb6-3"><a href="#cb6-3"></a><span class="fu">unzip</span>(temp_zip, <span class="at">exdir =</span> temp_dir)</span>
-<span id="cb6-4"><a href="#cb6-4"></a>water_data <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="fu">file.path</span>(temp_dir, <span class="st">"hyd250.shp"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>Reading layer `hyd250' from data source 
-  `/private/var/folders/zs/zycd14f96ks5gpx0bsb97xtr0000gn/T/RtmplfTWnP/hyd250.shp' 
-  using driver `ESRI Shapefile'
-Simple feature collection with 30050 features and 26 fields
-Geometry type: LINESTRING
-Dimension:     XY
-Bounding box:  xmin: 2241685 ymin: 1198722 xmax: 2743850 ymax: 1981814
-Projected CRS: NAD83 / Idaho Transverse Mercator</code></pre>
-</div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>temp_zip <span class="ot">&lt;-</span> <span class="fu">file.path</span>(temp_dir, <span class="st">"shp.zip"</span>)</span>
-<span id="cb8-2"><a href="#cb8-2"></a><span class="fu">download.file</span>(url4, temp_zip, <span class="at">mode =</span> <span class="st">"wb"</span>)</span>
-<span id="cb8-3"><a href="#cb8-3"></a><span class="fu">unzip</span>(temp_zip, <span class="at">exdir =</span> temp_dir)</span>
-<span id="cb8-4"><a href="#cb8-4"></a>county_data <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="fu">file.path</span>(temp_dir, <span class="st">"County-AK-HI-Moved-USA-Map.shp"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stdout">
-<pre><code>Reading layer `County-AK-HI-Moved-USA-Map' from data source 
-  `/private/var/folders/zs/zycd14f96ks5gpx0bsb97xtr0000gn/T/RtmplfTWnP/County-AK-HI-Moved-USA-Map.shp' 
-  using driver `ESRI Shapefile'
-Simple feature collection with 3115 features and 15 fields
-Geometry type: MULTIPOLYGON
-Dimension:     XY
-Bounding box:  xmin: -2573301 ymin: -1889441 xmax: 2256474 ymax: 1565782
-Projected CRS: Albers</code></pre>
-</div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>wells_filtered <span class="ot">&lt;-</span> wells_data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Production <span class="sc">&gt;</span> <span class="dv">5000</span>)</span>
-<span id="cb10-2"><a href="#cb10-2"></a>dams_filtered <span class="ot">&lt;-</span> Idaho_Dams_data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(SurfaceAre <span class="sc">&gt;</span> <span class="dv">50</span>, Source <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"SNAKE RIVER"</span>, <span class="st">"HENRYS FORK"</span>))</span>
-<span id="cb10-3"><a href="#cb10-3"></a></span>
-<span id="cb10-4"><a href="#cb10-4"></a>county_proj <span class="ot">&lt;-</span> <span class="fu">st_transform</span>(county_data, <span class="at">crs =</span> <span class="dv">26912</span>)</span>
-<span id="cb10-5"><a href="#cb10-5"></a>wells_proj <span class="ot">&lt;-</span> <span class="fu">st_transform</span>(wells_filtered, <span class="at">crs =</span> <span class="dv">26912</span>)</span>
-<span id="cb10-6"><a href="#cb10-6"></a>dams_proj <span class="ot">&lt;-</span> <span class="fu">st_transform</span>(dams_filtered, <span class="at">crs =</span> <span class="dv">26912</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>wells_filtered <span class="ot">&lt;-</span> wells_data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Production <span class="sc">&gt;</span> <span class="dv">5000</span>)</span>
+<span id="cb6-2"><a href="#cb6-2"></a>dams_filtered <span class="ot">&lt;-</span> Idaho_Dams_data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(SurfaceAre <span class="sc">&gt;</span> <span class="dv">50</span>, Source <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"SNAKE RIVER"</span>, <span class="st">"HENRYS FORK"</span>))</span>
+<span id="cb6-3"><a href="#cb6-3"></a></span>
+<span id="cb6-4"><a href="#cb6-4"></a>ID_counties <span class="ot">&lt;-</span> USAboundaries<span class="sc">::</span><span class="fu">us_counties</span>(<span class="at">states =</span> <span class="st">"Idaho"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
@@ -218,14 +179,16 @@ Projected CRS: Albers</code></pre>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb11-2"><a href="#cb11-2"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> county_proj, <span class="at">fill =</span> <span class="st">"lightgrey"</span>, <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
-<span id="cb11-3"><a href="#cb11-3"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> wells_proj, <span class="at">color =</span> <span class="st">"darkgreen"</span>, <span class="at">size =</span> <span class="dv">2</span>, <span class="at">shape =</span> <span class="dv">16</span>) <span class="sc">+</span></span>
-<span id="cb11-4"><a href="#cb11-4"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> dams_proj, <span class="at">color =</span> <span class="st">"blue"</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">shape =</span> <span class="dv">7</span>, <span class="at">linewidth =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb11-5"><a href="#cb11-5"></a>  <span class="fu">labs</span>(</span>
-<span id="cb11-6"><a href="#cb11-6"></a>    <span class="at">title =</span> <span class="st">"Idaho Key Water System Features"</span>,</span>
-<span id="cb11-7"><a href="#cb11-7"></a>  ) <span class="sc">+</span></span>
-<span id="cb11-8"><a href="#cb11-8"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> ID_counties, <span class="at">fill =</span> <span class="st">"lightgrey"</span>, <span class="at">color =</span> <span class="st">"darkgrey"</span>, <span class="at">linewidth =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb7-3"><a href="#cb7-3"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> wells_filtered, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">size =</span> <span class="dv">2</span>, <span class="at">shape =</span> <span class="dv">10</span>) <span class="sc">+</span></span>
+<span id="cb7-4"><a href="#cb7-4"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> dams_filtered, <span class="at">color =</span> <span class="st">"blue"</span>, <span class="at">size =</span> <span class="dv">3</span>, <span class="at">shape =</span> <span class="dv">7</span>, <span class="at">linewidth =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb7-5"><a href="#cb7-5"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb7-6"><a href="#cb7-6"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Idaho Water Map"</span>, <span class="at">subtitle =</span> <span class="st">"Filtered Wells and Dams in Idaho"</span>) <span class="sc">+</span></span>
+<span id="cb7-7"><a href="#cb7-7"></a>  <span class="fu">theme</span>(</span>
+<span id="cb7-8"><a href="#cb7-8"></a>    <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>, <span class="at">face =</span> <span class="st">"bold"</span>, <span class="at">color =</span> <span class="st">"navyblue"</span>),</span>
+<span id="cb7-9"><a href="#cb7-9"></a>    <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">14</span>, <span class="at">color =</span> <span class="st">"darkblue"</span>)</span>
+<span id="cb7-10"><a href="#cb7-10"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -234,10 +197,6 @@ Projected CRS: Albers</code></pre>
 </figure>
 </div>
 </div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="fu">ggsave</span>(<span class="st">"Idaho_Water_System_Map.png"</span>, <span class="at">width =</span> <span class="dv">12</span>, <span class="at">height =</span> <span class="dv">8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 </div>
 </section>
 
