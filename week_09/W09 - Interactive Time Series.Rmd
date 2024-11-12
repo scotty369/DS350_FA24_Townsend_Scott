@@ -1,0 +1,62 @@
+---
+title: "W09 Task - Interactive Time Series"
+author: "Scott Townsend"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+
+execute:
+  keep-md: true
+
+format:
+  html:
+    code-fold: true
+    code-line-numbers: true
+---
+
+### Libraries
+
+```{r, message=FALSE, warning=FALSE, fig.height=4, fig.width=12}
+library(tidyverse)
+library(dygraphs)
+library(tidyquant)
+```
+
+# Task 
+
+```{r, message=FALSE, warning=FALSE, fig.height=4, fig.width=12}
+stock_symbols <- c("AAPL", "GOOGL", "TSLA")
+start_date <- Sys.Date() - years(5)
+
+stock_data <- tq_get(stock_symbols, from = start_date, get = "stock.prices")
+
+stock_returns <- stock_data %>%
+  group_by(symbol) %>%
+  tq_transmute(select = adjusted, mutate_fun = periodReturn, period = "daily", type = "log") %>%
+  ungroup()
+
+stock_returns_wide <- stock_returns %>%
+  select(date, symbol, daily.returns) %>%
+  spread(symbol, daily.returns)
+
+dygraph(stock_returns_wide, main = "Daily Stock Returns Over the Last 5 Years") %>%
+  dyRangeSelector() %>%
+  dyOptions(stackedGraph = FALSE, fillGraph = TRUE) %>%
+  dyAxis("y", label = "Daily Return") %>%
+  dyLegend(width = 400)
+```
+
+# Optional
+
+```{r, message=FALSE, warning=FALSE, fig.height=4, fig.width=12}
+portfolio_returns <- stock_returns %>%
+  group_by(date) %>%
+  summarize(portfolio_return = mean(daily.returns, na.rm = TRUE)) %>%
+  mutate(cumulative_return = cumsum(portfolio_return))
+
+dygraph(portfolio_returns, main = "Cumulative Portfolio Return Over the Last 5 Years") %>%
+  dyOptions(stackedGraph = FALSE) %>%
+  dyAxis("y", label = "Cumulative Return")
+```
+
+# Summary of Findings
+
+Over the past five years, Tesla’s returns were the most unpredictable, with bigger daily changes, while Apple and Google showed steadier, smaller changes. The overall portfolio had a positive trend, especially in the last two years, suggesting that a mix of stable and high-growth tech stocks can provide a good balance of risk and reward
