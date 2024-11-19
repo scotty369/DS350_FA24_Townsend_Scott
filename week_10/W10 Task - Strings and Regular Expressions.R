@@ -1,55 +1,30 @@
----
-  title: "W10 Task - Strings and Regular Expressions"
-author: "Scott Townsend"
-date: "`r format(Sys.time(), '%B %d, %Y')`"
-
-execute:
-  keep-md: true
-
-format:
-  html:
-  code-fold: true
-code-line-numbers: true
----
-  
-### Libraries & Data Sets
-  
-```{r, message=FALSE, warning=FALSE, fig.height=4, fig.width=12}
+# Libraries
 library(readr)
-```
+library(stringr)
 
-# Task - Visualization
+# Task 1: Read the data
+random_letters <- read_lines("https://byuistats.github.io/M335/data/randomletters.txt")
+letters_wnumbers <- read_lines("https://byuistats.github.io/M335/data/randomletters_wnumbers.txt")
 
-```{r, message=FALSE, warning=FALSE, fig.height=4, fig.width=12}
-random_letters <- read_lines("randomletters.txt")
-random_letters_numbers <- read_lines("randomletters_wnumbers.txt")
+# Combine lines into a single string for processing
+letters_combined <- str_c(random_letters, collapse = "")
 
-hidden_quote <- function(text) {
-  selected_letters <- substring(text, seq(1, nchar(text), by = 1700), seq(1, nchar(text), by = 1700))
-  quote <- paste(selected_letters, collapse = "")
-  hidden_message <- sub("^(.*?\\.).*$", "\\1", quote)
-  return(hidden_message)
-}
+# Task 2: Extract the hidden quote
+indices <- seq(1, str_length(letters_combined), by = 1700) # Every 1700th letter
+extracted_letters <- str_sub(letters_combined, indices, indices)
+hidden_message <- str_c(extracted_letters, collapse = "")
+quote <- str_extract(hidden_message, ".*?\\.") # Extract the quote ending with a period
+cat("Hidden Quote:\n", quote, "\n\n")
 
-quote_message <- hidden_quote(random_letters)
-cat("Hidden Quote:\n", quote_message, "\n")
+# Task 3: Decode numbers into letters
+letters_wnumbers_combined <- str_c(letters_wnumbers, collapse = "")
+numbers <- as.integer(str_extract_all(letters_wnumbers_combined, "\\d+")[[1]])
+decoded_message <- str_c(letters[numbers], collapse = "")
+cat("Decoded Message:\n", decoded_message, "\n\n")
 
-decode_numbers_to_letters <- function(text) {
-  numbers <- as.numeric(unlist(regmatches(text, gregexpr("\\d+", text))))
-  decoded_message <- paste(letters[numbers], collapse = "")
-  return(decoded_message)
-}
+# Task 4: Find the longest sequence of vowels
+cleaned_letters <- str_remove_all(letters_combined, "[ .]") # Remove spaces and periods
+vowel_sequences <- str_extract_all(cleaned_letters, "[aeiouAEIOU]+")[[1]]
+longest_vowel_sequence <- vowel_sequences[which.max(str_length(vowel_sequences))]
+cat("Longest Vowel Sequence:\n", longest_vowel_sequence, "\n")
 
-decoded_message <- decode_numbers_to_letters(random_letters_numbers)
-cat("Decoded Message:\n", decoded_message, "\n")
-
-longest_vowel_sequence <- function(text) {
-  cleaned_text <- gsub("[ .]", "", text)
-  vowels <- unlist(regmatches(cleaned_text, gregexpr("[aeiou]+", cleaned_text)))
-  longest <- vowels[which.max(nchar(vowels))]
-  return(longest)
-}
-
-longest_vowels <- longest_vowel_sequence(random_letters)
-cat("Longest Sequence of Vowels:\n", longest_vowels, "\n")
-```
