@@ -1,0 +1,64 @@
+---
+title: "W12 Task - Chipotle Functions"
+author: "Scott Townsend"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+
+execute:
+  keep-md: true
+
+format:
+  html:
+    code-fold: true
+    code-line-numbers: true
+---
+
+### Libraries & Data Sets
+
+```{r, message=FALSE, warning=FALSE, fig.height=4, fig.width=12}
+library(tibble)
+library(dplyr)
+library(stringr)
+```
+
+# Task - Visualization
+
+```{r, message=FALSE, warning=FALSE, fig.height=4, fig.width=12}
+parse_popularity <- function(input_string) {
+  cleaned_string <- str_remove_all(input_string, "[{}\"]")
+  key_value_pairs <- str_split(cleaned_string, ",")[[1]]
+  
+  parsed_data <- tibble(
+    day = sapply(key_value_pairs, function(x) str_split(x, ":")[[1]][1]),
+    visits = as.numeric(sapply(key_value_pairs, function(x) str_split(x, ":")[[1]][2]))
+  )
+  
+  return(parsed_data)
+}
+
+find_most_popular_day <- function(input_string) {
+  data <- parse_popularity(input_string)
+  
+  max_visits <- max(data$visits)
+  
+  most_popular <- data %>%
+    filter(visits == max_visits) %>%
+    pull(day)
+  
+  return(paste(most_popular, collapse = ", "))
+}
+
+# Test Case 1
+input1 <- "{\"Monday\":94,\"Tuesday\":76,\"Wednesday\":89,\"Thursday\":106,\"Friday\":130,\"Saturday\":128,\"Sunday\":58}"
+print(parse_popularity(input1))
+print(find_most_popular_day(input1))
+
+# Test Case 2
+input2 <- "{\"Monday\":18,\"Tuesday\":16,\"Wednesday\":14,\"Thursday\":27,\"Friday\":26,\"Saturday\":36,\"Sunday\":20}"
+print(parse_popularity(input2))
+print(find_most_popular_day(input2))
+
+# Test Case 3
+input3 <- "{\"Monday\":0,\"Tuesday\":0,\"Wednesday\":1,\"Thursday\":0,\"Friday\":0,\"Saturday\":1,\"Sunday\":0}"
+print(parse_popularity(input3))
+print(find_most_popular_day(input3))
+```
