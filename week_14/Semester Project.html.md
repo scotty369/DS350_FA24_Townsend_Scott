@@ -1,7 +1,7 @@
 ---
 title: "Semester Project"
 author: "Scott Townsend"
-date: "December 06, 2024"
+date: "December 12, 2024"
 
 execute:
   keep-md: true
@@ -16,6 +16,13 @@ format:
 
 # Introduction
 This project explores student performance data, aiming to uncover key insights into the relationships between subject scores and factors such as gender and ethnicity. By visualizing and analyzing the distribution of scores across math, reading, and writing, we aim to identify trends, disparities, and potential areas for educational improvement. The analysis will delve into gender-based performance differences, providing a clearer picture of how males and females perform across subjects, as well as examining ethnic diversity to understand the composition of the student body and its potential correlation with academic outcomes. Through this comprehensive analysis, we hope to inform targeted educational strategies that can enhance student learning and support diverse needs.
+
+### Questions this case study will attempt to answer: 
+
+1. How do average scores in math, reading, and writing compare between male and female students?
+2. What is the distribution of scores across different subjects, and are there any significant outliers or trends?
+3. How is the student body distributed across different racial and ethnic groups, and what implications might this have for academic performance?
+
 
 ### Libraries & Data Sets
 
